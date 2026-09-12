@@ -1,0 +1,15 @@
+.venv/
+.build-venv/
+build/
+dist/
+__pycache__/
+*.pyc
+capture_helper/bin/
+capture_helper/obj/
+overlay_helper/bin/
+overlay_helper/obj/
+audio/test_audio*.wav
+audio/sample_speech_ru.wav
+*.user
+*.suo
+.vs/

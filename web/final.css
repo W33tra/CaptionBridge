@@ -1,0 +1,36 @@
+[hidden] {
+  display: none !important;
+}
+
+.lead {
+  margin-top: -6px;
+  color: #a7cfae;
+}
+
+.panel,
+details {
+  border-radius: 8px;
+  background: rgba(11, 15, 12, 0.72);
+}
+
+.panel {
+  border: 1px solid #285d32;
+  padding: 16px;
+}
+
+.panel h2 {
+  margin-top: 0;
+  color: #b7f7c2;
+  font-size: 1.1rem;
+}
+
+.primary-action {
+  color: #071109;
+  background: #56d364;
+  font-weight: 700;
+}
+
+.primary-action:hover,
+.primary-action:focus-visible {
+  background: #7ee787;
+}

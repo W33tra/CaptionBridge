@@ -1,0 +1,152 @@
+:root {
+  color-scheme: dark;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  background: #0b0f0c;
+  color: #b7f7c2;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  width: min(760px, calc(100% - 32px));
+  margin: 40px auto;
+}
+
+h1 {
+  color: #e7ffeb;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+pre {
+  border-left: 2px solid #3fb950;
+  padding: 12px 16px;
+  white-space: pre-wrap;
+}
+
+section {
+  margin-top: 24px;
+}
+
+button,
+select,
+input,
+audio {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px 0;
+}
+
+button {
+  border: 1px solid #3fb950;
+  padding: 10px 12px;
+  color: #b7f7c2;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+select {
+  border: 1px solid #3fb950;
+  padding: 10px 12px;
+  color: #e7ffeb;
+  background: #0b0f0c;
+  font: inherit;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 5px;
+  border: 1px solid #3fb950;
+  padding: 8px;
+  color: #e7ffeb;
+  background: #0b0f0c;
+  font: inherit;
+}
+
+input[type="range"] {
+  height: 24px;
+  border: 0;
+  padding: 0;
+  accent-color: #3fb950;
+  cursor: ew-resize;
+}
+
+output {
+  color: #e7ffeb;
+  font-weight: 600;
+}
+
+details {
+  margin: 20px 0;
+  border: 1px solid #285d32;
+  padding: 12px;
+}
+
+summary {
+  cursor: pointer;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  accent-color: #3fb950;
+}
+
+.profile-panel {
+  margin: 18px 0;
+  border-top: 1px solid #285d32;
+  padding-top: 14px;
+}
+
+.font-upload {
+  margin-top: 14px;
+  border-top: 1px solid #285d32;
+  padding-top: 14px;
+}
+
+@media (max-width: 650px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+video {
+  width: 100%;
+  margin-top: 16px;
+  background: #050705;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+button:hover,
+button:focus-visible {
+  background: #15341c;
+  outline: none;
+}
+
+.hint {
+  color: #7dba87;
+  font-size: 0.85rem;
+}

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CaptionBridge</title>
+  <link rel="stylesheet" href="/web/style.css?v=7">
+</head>
+<body>
+  <main>
+    <h1>CaptionBridge</h1>
+    <pre id="console" aria-live="polite">Chrome: проверка...
+
+Перед проверкой:
+Chrome → Настройки → Специальные возможности
+→ Автоматические субтитры = ВКЛ.</pre>
+
+    <section id="wrong-browser" hidden>
+      <p>CaptionBridge поддерживает Google Chrome и экспериментальный режим Яндекс Браузера.</p>
+      <button id="open-chrome">Открыть в Chrome</button>
+      <pre id="chrome-error" hidden></pre>
+    </section>
+
+    <section id="tests" hidden>
+      <pre id="browser-mode"></pre>
+      <button id="open-yandex">Открыть эксперимент в Яндекс Браузере</button>
+
+      <details id="overlay-settings">
+        <summary>Отдельный оверлей субтитров</summary>
+        <div class="settings-grid">
+          <label>Ширина: <output id="overlay-width-value">900</output> px
+            <input id="overlay-width" type="range" min="320" max="2400" step="10" value="900">
+          </label>
+          <label>Высота: <output id="overlay-height-value">220</output> px
+            <input id="overlay-height" type="range" min="50" max="1400" step="10" value="220">
+          </label>
+          <label>Размер шрифта: <output id="overlay-font-size-value">32</output> px
+            <input id="overlay-font-size" type="range" min="12" max="96" step="1" value="32">
+          </label>
+          <label>Шрифт
+            <select id="overlay-font-family">
+              <option value="Chrome">Как в Chrome: Roboto → Arial</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Arial">Arial</option>
+              <option value="Segoe UI">Segoe UI</option>
+              <option value="Consolas">Consolas</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+          </label>
+          <label>Непрозрачность: <output id="overlay-opacity-value">90</output>%
+            <input id="overlay-opacity" type="range" min="30" max="100" step="1" value="90">
+          </label>
+          <label class="toggle-row">
+            <input id="overlay-click-through" type="checkbox">
+            Пропускать щелчки мыши сквозь оверлей
+          </label>
+          <label>Штатное окно субтитров Chrome
+            <select id="native-caption-placement">
+              <option value="leave">Не перемещать</option>
+              <option value="edge-right">Оставить 1 пиксель у правого края</option>
+              <option value="offscreen-right">Полностью убрать за правый край</option>
+              <option value="restore">Вернуть на экран</option>
+            </select>
+          </label>
+        </div>
+        <div class="font-upload">
+          <label>Добавить свой шрифт (.ttf или .otf)
+            <input id="custom-font-file" type="file" accept=".ttf,.otf,font/ttf,font/otf">
+          </label>
+          <button id="add-custom-font">Добавить шрифт в список</button>
+        </div>
+        <p id="overlay-geometry" class="hint">Фактические координаты и размер появятся после открытия оверлея.</p>
+        <div class="profile-panel">
+          <strong>Именованные расположения</strong>
+          <div class="settings-grid">
+            <label>Название
+              <input id="overlay-profile-name" type="text" maxlength="60" placeholder="Например: Дота">
+            </label>
+            <label>Сохранённые профили
+              <select id="overlay-profile-select">
+                <option value="">Профили пока не сохранены</option>
+              </select>
+            </label>
+          </div>
+          <button id="save-overlay-profile">Сохранить текущее положение и настройки</button>
+          <button id="load-overlay-profile">Загрузить выбранный профиль</button>
+          <button id="delete-overlay-profile">Удалить выбранный профиль</button>
+        </div>
+        <button id="start-overlay">Открыть отдельное окно оверлея наверху экрана</button>
+        <button id="apply-overlay">Применить настройки к открытому окну</button>
+        <button id="return-overlay">Вернуть оверлей на экран</button>
+        <button id="stop-overlay">Закрыть оверлей</button>
+        <p id="overlay-status" class="hint">После открытия все настройки изменяют окно сразу. В режиме «сквозь щелчки» перетащить оверлей мышью нельзя — сначала отключите режим здесь.</p>
+      </details>
+
+      <label for="session-select">Приложение Windows с активным аудиопотоком:</label>
+      <select id="session-select">
+        <option value="">Загрузка аудиосессий...</option>
+      </select>
+      <button id="refresh-apps">Обновить список приложений</button>
+      <button id="process-test">Запустить субтитры для выбранного приложения</button>
+      <button id="stop-test">Остановить текущий поток</button>
+      <p class="hint">Перед обновлением списка включите звук в нужном приложении. Чтобы не слышать его дважды, отключите звук у вкладки CaptionBridge — Chrome обычно продолжает формировать субтитры.</p>
+
+      <button id="stream-test">[1] Тестовый поток: WebSocket → PCM → Web Audio</button>
+      <button id="file-test">[2] Проиграть русскую тестовую речь</button>
+      <button id="local-test">[3] Выбрать локальный аудиофайл</button>
+      <button id="restart-test">[К] Перезапустить потоковый тест</button>
+      <input id="file-input" type="file" accept="audio/*" hidden>
+      <audio id="audio-player" controls preload="metadata" hidden></audio>
+      <video id="video-player" controls playsinline hidden></video>
+      <canvas id="stream-canvas" width="640" height="360" hidden></canvas>
+      <p class="hint">Кнопки с цифрами предназначены для диагностики. Во время захвата оставьте эту вкладку открытой или свёрнутой.</p>
+    </section>
+  </main>
+  <script src="/web/app.js?v=7"></script>
+</body>
+</html>
