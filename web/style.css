@@ -150,3 +150,20 @@ button:focus-visible {
   color: #7dba87;
   font-size: 0.85rem;
 }
+
+.legal-footer {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid #285d32;
+  color: #9aa89d;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.legal-footer p {
+  margin: 6px 0;
+}
+
+.legal-footer a {
+  color: #8be399;
+}

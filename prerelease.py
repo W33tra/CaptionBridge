@@ -12,6 +12,14 @@ import main as core
 
 CAPTION_CHECK_AUDIO = core.AUDIO_DIR / "caption_check_ru.wav"
 BUNDLED_NATIVE_DIR = core.ROOT / "native"
+APP_LABEL = "предрелизная версия"
+LEGAL_DOCUMENTS = {
+    "license": core.ROOT / "LICENSE",
+    "notices": core.ROOT / "THIRD_PARTY_NOTICES.md",
+    "privacy": core.ROOT / "PRIVACY.md",
+    "contributing": core.ROOT / "CONTRIBUTING.md",
+}
+LICENSES_DIR = core.ROOT / "licenses"
 
 if (BUNDLED_NATIVE_DIR.is_dir()):
     core.CAPTURE_EXE = BUNDLED_NATIVE_DIR / "CaptionBridge.Host.exe"
@@ -58,6 +66,18 @@ async def final_index(_request: web.Request) -> web.FileResponse:
     )
 
 
+async def legal_document(request: web.Request) -> web.Response:
+    path = LEGAL_DOCUMENTS.get(request.match_info["document"])
+    if path is None or not path.is_file():
+        raise web.HTTPNotFound()
+    return web.Response(
+        text=path.read_text(encoding="utf-8"),
+        content_type="text/plain",
+        charset="utf-8",
+        headers={"Cache-Control": "no-store"},
+    )
+
+
 def make_app() -> web.Application:
     app = web.Application(client_max_size=21 * 1024**2)
     app[core.STOP_EVENT] = asyncio.Event()
@@ -66,6 +86,7 @@ def make_app() -> web.Application:
     app.on_cleanup.append(core.cleanup_control_websocket)
 
     app.router.add_get("/", final_index)
+    app.router.add_get("/legal/{document}", legal_document)
     app.router.add_get("/api/status", core.status)
     app.router.add_get("/api/sessions", core.active_audio_sessions)
     app.router.add_get("/api/caption-windows", core.caption_windows)
@@ -79,6 +100,7 @@ def make_app() -> web.Application:
     app.router.add_get("/ws/audio", core.audio_websocket)
     app.router.add_static("/web", core.WEB_DIR, show_index=False)
     app.router.add_static("/audio", core.AUDIO_DIR, show_index=False)
+    app.router.add_static("/legal/licenses", LICENSES_DIR, show_index=False)
     return app
 
 
@@ -92,6 +114,12 @@ def self_check() -> int:
         CAPTION_CHECK_AUDIO,
         core.CAPTURE_EXE,
         core.OVERLAY_EXE,
+        *LEGAL_DOCUMENTS.values(),
+        LICENSES_DIR / "Python-3.13-LICENSE.txt",
+        LICENSES_DIR / "aiohttp-3.14.3-LICENSE.txt",
+        LICENSES_DIR / "PyInstaller-6.22.2-COPYING.txt",
+        LICENSES_DIR / "dotnet-LICENSE.txt",
+        LICENSES_DIR / "dotnet-ThirdPartyNotices.txt",
     )
     missing = [str(path) for path in required_files if not path.is_file()]
     if missing:
@@ -123,7 +151,7 @@ async def run() -> None:
     site = web.TCPSite(runner, core.HOST, core.PORT)
     await site.start()
 
-    print("CaptionBridge — предрелизная версия запущена", flush=True)
+    print(f"CaptionBridge — {APP_LABEL} запущена", flush=True)
     print(f"Сервер: {core.URL}\n", flush=True)
     if chrome:
         print(f"Chrome найден:\n{chrome}\n", flush=True)
@@ -139,7 +167,7 @@ async def run() -> None:
         await app[core.STOP_EVENT].wait()
     finally:
         await runner.cleanup()
-    print("CaptionBridge — предрелизная версия остановлена.", flush=True)
+    print(f"CaptionBridge — {APP_LABEL} остановлена.", flush=True)
 
 
 if __name__ == "__main__":
@@ -148,7 +176,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(run())
     except KeyboardInterrupt:
-        print("\nCaptionBridge — предрелизная версия остановлена.")
+        print(f"\nCaptionBridge — {APP_LABEL} остановлена.")
     except (OSError, RuntimeError) as error:
         print(f"Не удалось запустить CaptionBridge: {error}", file=sys.stderr)
         raise SystemExit(1)

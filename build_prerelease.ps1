@@ -1,3 +1,8 @@
+param(
+    [string]$EntryPoint = "prerelease.py",
+    [string]$ExecutableName = "CaptionBridge-Prerelease"
+)
+
 $ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -40,7 +45,8 @@ if ($LASTEXITCODE -ne 0) { throw "Overlay helper publish failed." }
     --clean `
     --onefile `
     --console `
-    --name "CaptionBridge-Prerelease" `
+    --name $ExecutableName `
+    --version-file "$(Join-Path $projectRoot 'windows_version_info.txt')" `
     --distpath $distribution `
     --workpath $pyinstallerWork `
     --specpath $pyinstallerWork `
@@ -50,9 +56,14 @@ if ($LASTEXITCODE -ne 0) { throw "Overlay helper publish failed." }
     --add-data "$(Join-Path $projectRoot 'web\app.js');web" `
     --add-data "$(Join-Path $projectRoot 'web\final.js');web" `
     --add-data "$(Join-Path $projectRoot 'audio\caption_check_ru.wav');audio" `
+    --add-data "$(Join-Path $projectRoot 'LICENSE');." `
+    --add-data "$(Join-Path $projectRoot 'CONTRIBUTING.md');." `
+    --add-data "$(Join-Path $projectRoot 'PRIVACY.md');." `
+    --add-data "$(Join-Path $projectRoot 'THIRD_PARTY_NOTICES.md');." `
+    --add-data "$(Join-Path $projectRoot 'licenses');licenses" `
     --add-binary "$nativeOutput;native" `
-    (Join-Path $projectRoot "prerelease.py")
+    (Join-Path $projectRoot $EntryPoint)
 if ($LASTEXITCODE -ne 0) { throw "PyInstaller build failed." }
 
-$resultPath = Join-Path $distribution "CaptionBridge-Prerelease.exe"
+$resultPath = Join-Path $distribution "$ExecutableName.exe"
 Write-Output "Built: $resultPath"
